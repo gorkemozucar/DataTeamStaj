@@ -3,21 +3,38 @@ const mongodb = require('mongodb');
 
 const router = express.Router();
 
+
 //get
-router.get('./api/posts', async (req,res) => {
+router.get('/', async (req,res) => {
     const posts = await loadPostsCollection();
     res.send(await posts.find({}).toArray());
 });
 //add
+router.post('/', async (req,res) => {
+
+    const posts = await loadPostsCollection();
+    await posts.insertOne({
+        text: req.body.text,
+        createdAt: new Date()
+    });
+    res.status(201).send();
+});
 
 //delete
 
+router.delete('/:id', async (req,res) => {
+    const posts = await loadPostsCollection();
+    await posts.deleteOne({_id: new mongodb.ObjectID(req.params.id)});
+    res.status(200).send();
+});
+
 async function loadPostsCollection () {
     const client = await mongodb.MongoClient.connect
-    ('mongodb+srv://gorkemozucar:serkangorkem1998@expressvuemongo.vnvut.mongodb.net/ExpressVueMongo?retryWrites=true&w=majority',{
-        useNewUrlParser : true
+    ('mongodb+srv://gorkemozucar:gorkem1998@vueme.vnvut.mongodb.net/?retryWrites=true&w=majority',{
+        useNewUrlParser : true ,
+        useUnifiedTopology: true
     });
-    return client.db('ExpressVueMongo').collection('posts');
+    return client.db('VueME').collection('posts');
 }
 
 module.exports = router ;
