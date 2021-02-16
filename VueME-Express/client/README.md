@@ -1,4 +1,4 @@
-# vueme-vue
+# client
 
 ## Project setup
 ```

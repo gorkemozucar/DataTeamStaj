@@ -27,6 +27,19 @@ router.delete('/:id', async (req,res) => {
     res.status(200).send();
 });
 
+//update
+router.put('/:id', async (req,res) =>{
+    
+        const posts = await loadPostsCollection();
+        await posts.updateOne(
+            {_id: new mongodb.ObjectID(req.params.id)},
+            { $set: { text: req.body.text } },
+            { upsert: true });
+            
+        res.status(200).send();    
+});
+    
+
 async function loadPostsCollection () {
     const client = await mongodb.MongoClient.connect
     ('mongodb+srv://gorkemozucar:gorkem1998@vueme.vnvut.mongodb.net/?retryWrites=true&w=majority',{
